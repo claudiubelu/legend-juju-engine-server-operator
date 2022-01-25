@@ -4,8 +4,9 @@
 """Module testing the Legend Engine Operator."""
 
 import json
+from unittest import mock
 
-from charms.finos_legend_libs.v0 import legend_operator_testing
+from charms.finos_legend_libs.v0 import legend_operator_base, legend_operator_testing
 from ops import testing as ops_testing
 
 import charm
@@ -73,3 +74,12 @@ class LegendEngineTestCase(legend_operator_testing.TestBaseFinosCoreServiceLegen
             rel.data[self.harness.charm.app],
             {"legend-engine-url": self.harness.charm._get_engine_service_url()},
         )
+
+    @mock.patch.object(legend_operator_base, "get_ip_address")
+    def test_get_legend_gitlab_redirect_uris(self, mock_get_ip_address):
+        self.harness.begin()
+        mock_get_ip_address.return_value = "fake_ip"
+        actual_uris = self.harness.charm._get_legend_gitlab_redirect_uris()
+
+        expected_url = "http://fake_ip:6060/callback"
+        self.assertEqual([expected_url], actual_uris)

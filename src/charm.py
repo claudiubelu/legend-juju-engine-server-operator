@@ -19,7 +19,7 @@ LEGEND_GITLAB_RELATION_NAME = "legend-engine-gitlab"
 LEGEND_STUDIO_RELATION_NAME = "legend-engine"
 
 ENGINE_CONFIG_FILE_CONTAINER_LOCAL_PATH = "/engine-config.json"
-ENGINE_SERVICE_URL_FORMAT = "%(schema)s://%(host)s:%(port)s%(path)s"
+ENGINE_SERVICE_URL_FORMAT = "%(schema)s://%(host)s:%(port)s"
 ENGINE_GITLAB_REDIRECT_URI_FORMAT = "%(base_url)s/callback"
 
 TRUSTSTORE_PASSPHRASE = "Legend Engine"
@@ -27,7 +27,7 @@ TRUSTSTORE_CONTAINER_LOCAL_PATH = "/truststore.jks"
 
 APPLICATION_CONNECTOR_PORT_HTTP = 6060
 APPLICATION_CONNECTOR_PORT_HTTPS = 6066
-APPLICATION_ROOT_PATH = "/api"
+APPLICATION_ROOT_PATH = "/"
 
 APPLICATION_LOGGING_FORMAT = "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p [%thread] %c - %m%n"
 
@@ -128,7 +128,6 @@ class LegendEngineServerCharm(legend_operator_base.BaseFinosLegendCoreServiceCha
                 "schema": legend_operator_base.APPLICATION_CONNECTOR_TYPE_HTTP,
                 "host": ip_address,
                 "port": APPLICATION_CONNECTOR_PORT_HTTP,
-                "path": APPLICATION_ROOT_PATH,
             }
         )
 
