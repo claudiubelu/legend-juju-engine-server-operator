@@ -19,7 +19,7 @@ LEGEND_GITLAB_RELATION_NAME = "legend-engine-gitlab"
 LEGEND_STUDIO_RELATION_NAME = "legend-engine"
 
 ENGINE_CONFIG_FILE_CONTAINER_LOCAL_PATH = "/engine-config.json"
-ENGINE_SERVICE_URL_FORMAT = "%(schema)s://%(host)s:%(port)s"
+ENGINE_SERVICE_URL_FORMAT = "%(schema)s://%(host)s"
 ENGINE_GITLAB_REDIRECT_URI_FORMAT = "%(base_url)s/callback"
 
 TRUSTSTORE_PASSPHRASE = "Legend Engine"
@@ -121,13 +121,12 @@ class LegendEngineServerCharm(legend_operator_base.BaseFinosLegendCoreServiceCha
         return LEGEND_DB_RELATION_NAME
 
     def _get_engine_service_url(self):
-        ip_address = legend_operator_base.get_ip_address()
+        svc_name = self.model.config["external-hostname"] or self.app.name
         return ENGINE_SERVICE_URL_FORMAT % (
             {
                 # NOTE(aznashwan): we always return the plain HTTP endpoint:
                 "schema": legend_operator_base.APPLICATION_CONNECTOR_TYPE_HTTP,
-                "host": ip_address,
-                "port": APPLICATION_CONNECTOR_PORT_HTTP,
+                "host": svc_name,
             }
         )
 
