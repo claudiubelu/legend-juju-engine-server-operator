@@ -122,7 +122,7 @@ class LegendEngineServerCharm(legend_operator_base.BaseFinosLegendCoreServiceCha
 
     def _get_engine_service_url(self):
         ip_address = legend_operator_base.get_ip_address()
-        return ENGINE_SERVICE_URL_FORMAT % (
+        service_url = ENGINE_SERVICE_URL_FORMAT % (
             {
                 # NOTE(aznashwan): we always return the plain HTTP endpoint:
                 "schema": legend_operator_base.APPLICATION_CONNECTOR_TYPE_HTTP,
@@ -130,6 +130,9 @@ class LegendEngineServerCharm(legend_operator_base.BaseFinosLegendCoreServiceCha
                 "port": APPLICATION_CONNECTOR_PORT_HTTP,
             }
         )
+
+        svc_name = self.model.config["external-hostname"] or self.app.name
+        return "http://%s/" % svc_name
 
     def _get_legend_gitlab_redirect_uris(self):
         base_url = self._get_engine_service_url()

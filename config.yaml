@@ -10,7 +10,15 @@ options:
     # offer a more detailed description on them.
     default: TEST_IGNORE_FUNCTION_MATCH
     description: Server deployment mode.
-  
+
+  ### Nginx Ingress Integrator-related options:
+  external-hostname:
+    type: string
+    default: ""
+    description: |
+      String representing the DNS name this Application should respond to.
+      By default, this will be the Application's name.
+
   # TODO(aznashwan): add a separate option for https endpoints?
   # Will need to see what certificates needs installing and where.
 
