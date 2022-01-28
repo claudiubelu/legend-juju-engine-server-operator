@@ -83,3 +83,6 @@ class LegendEngineTestCase(legend_operator_testing.TestBaseFinosCoreServiceLegen
 
         expected_url = "http://fake_ip:6060/callback"
         self.assertEqual([expected_url], actual_uris)
+
+    def test_upgrade_charm(self):
+        self._test_upgrade_charm()
