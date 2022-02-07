@@ -225,12 +225,26 @@ class LegendEngineServerCharm(legend_operator_base.BaseFinosLegendCoreServiceCha
 
         return {ENGINE_CONFIG_FILE_CONTAINER_LOCAL_PATH: (json.dumps(engine_config, indent=4))}
 
-    def _on_studio_relation_joined(self, event: charm.RelationJoinedEvent) -> None:
-        rel = event.relation
+    def _set_studio_relation_data(self, relation=None):
+        """Updates Legend Studio relation with the current Engine Service URL."""
+        relation = relation or self._get_relation(LEGEND_STUDIO_RELATION_NAME)
+        if not relation:
+            return
+
         base_url = self._get_engine_service_base_url()
         engine_url = ENGINE_API_FORMAT % {"base_url": base_url}
         logger.info("Providing following Engine URL to Studio: %s", engine_url)
-        rel.data[self.app]["legend-engine-url"] = engine_url
+        relation.data[self.app]["legend-engine-url"] = engine_url
+
+    def _on_config_changed(self, event: charm.ConfigChangedEvent):
+        super()._on_config_changed(event)
+
+        # If the external-hostname config changed, we also need to update the
+        # Legend Studio relation data with the new Engine URL.
+        self._set_studio_relation_data()
+
+    def _on_studio_relation_joined(self, event: charm.RelationJoinedEvent) -> None:
+        self._set_studio_relation_data()
 
     def _on_studio_relation_changed(self, event: charm.RelationChangedEvent) -> None:
         pass

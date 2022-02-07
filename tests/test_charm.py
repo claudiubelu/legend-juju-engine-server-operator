@@ -85,6 +85,27 @@ class LegendEngineTestCase(legend_operator_testing.TestBaseFinosCoreServiceLegen
         )
         self.assertEqual([expected_url], actual_uris)
 
+    def test_config_changed_update_studio_relation(self):
+        self.harness.set_leader(True)
+        self.harness.begin_with_initial_hooks()
+
+        # Setup the initial relation with Legend Studio.
+        rel_id = self._add_relation(charm.LEGEND_STUDIO_RELATION_NAME, {})
+
+        # Update the config, and expect the relation data to be updated.
+        hostname = "foo.lish"
+        self.harness.update_config({"external-hostname": hostname})
+
+        rel = self.harness.charm.framework.model.get_relation(
+            charm.LEGEND_STUDIO_RELATION_NAME, rel_id
+        )
+        base_url = "http://%s%s" % (hostname, charm.ENGINE_INGRESS_ROUTE)
+        expected_url = charm.ENGINE_API_FORMAT % {"base_url": base_url}
+        self.assertEqual(
+            rel.data[self.harness.charm.app],
+            {"legend-engine-url": expected_url},
+        )
+
     def test_upgrade_charm(self):
         self._test_upgrade_charm()
 
