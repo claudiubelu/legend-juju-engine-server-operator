@@ -85,6 +85,9 @@ class LegendEngineTestCase(legend_operator_testing.TestBaseFinosCoreServiceLegen
         )
         self.assertEqual([expected_url], actual_uris)
 
+    def test_config_changed_update_gitlab_relation(self):
+        self._test_update_config_gitlab_relation()
+
     def test_config_changed_update_studio_relation(self):
         self.harness.set_leader(True)
         self.harness.begin_with_initial_hooks()
