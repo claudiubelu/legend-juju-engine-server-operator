@@ -128,10 +128,13 @@ class LegendEngineServerCharm(legend_operator_base.BaseFinosLegendCoreServiceCha
 
     def _get_engine_service_base_url(self):
         svc_name = self.model.config["external-hostname"] or self.app.name
+        schema = legend_operator_base.APPLICATION_CONNECTOR_TYPE_HTTP
+        if self.model.config["enable-tls"]:
+            schema = legend_operator_base.APPLICATION_CONNECTOR_TYPE_HTTPS
+
         return ENGINE_SERVICE_URL_FORMAT % (
             {
-                # NOTE(aznashwan): we always return the plain HTTP endpoint:
-                "schema": legend_operator_base.APPLICATION_CONNECTOR_TYPE_HTTP,
+                "schema": schema,
                 "host": svc_name,
                 "ingress_path": ENGINE_INGRESS_ROUTE,
             }

@@ -85,6 +85,16 @@ class LegendEngineTestCase(legend_operator_testing.TestBaseFinosCoreServiceLegen
         )
         self.assertEqual([expected_url], actual_uris)
 
+        # Test with enable-tls set.
+        self.harness.update_config({"enable-tls": True})
+        actual_uris = self.harness.charm._get_legend_gitlab_redirect_uris()
+
+        expected_url = "https://%s%s/callback" % (
+            self.harness.charm.app.name,
+            charm.ENGINE_INGRESS_ROUTE,
+        )
+        self.assertEqual([expected_url], actual_uris)
+
     def test_config_changed_update_gitlab_relation(self):
         self._test_update_config_gitlab_relation()
 
@@ -97,12 +107,12 @@ class LegendEngineTestCase(legend_operator_testing.TestBaseFinosCoreServiceLegen
 
         # Update the config, and expect the relation data to be updated.
         hostname = "foo.lish"
-        self.harness.update_config({"external-hostname": hostname})
+        self.harness.update_config({"external-hostname": hostname, "enable-tls": True})
 
         rel = self.harness.charm.framework.model.get_relation(
             charm.LEGEND_STUDIO_RELATION_NAME, rel_id
         )
-        base_url = "http://%s%s" % (hostname, charm.ENGINE_INGRESS_ROUTE)
+        base_url = "https://%s%s" % (hostname, charm.ENGINE_INGRESS_ROUTE)
         expected_url = charm.ENGINE_API_FORMAT % {"base_url": base_url}
         self.assertEqual(
             rel.data[self.harness.charm.app],
@@ -128,4 +138,11 @@ class LegendEngineTestCase(legend_operator_testing.TestBaseFinosCoreServiceLegen
         actual_url = self.harness.charm._get_engine_service_base_url()
 
         expected_url = "http://%s%s" % (hostname, charm.ENGINE_INGRESS_ROUTE)
+        self.assertEqual(expected_url, actual_url)
+
+        # Test with enable-tls set.
+        self.harness.update_config({"enable-tls": True})
+        actual_url = self.harness.charm._get_engine_service_base_url()
+
+        expected_url = "https://%s%s" % (hostname, charm.ENGINE_INGRESS_ROUTE)
         self.assertEqual(expected_url, actual_url)
